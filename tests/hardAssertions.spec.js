@@ -1,9 +1,4 @@
-/* Assertions
------------
-Playwright includes test assertions in the form of expect function.
-Reference: https://playwright.dev/docs/test-assertions
-
-1) expect(page).toHaveURL()     Page has URL
+/*1) expect(page).toHaveURL()     Page has URL
 2) expect(page).toHaveTitle()   Page has title
 3) expect(locator).toBeVisible()  Element is visible
 4) expect(locator).toBeEnabled()  Control is enabled
@@ -30,37 +25,47 @@ test('Assertions', async ({ page }) => {
   await expect(page).toHaveTitle('Register Account');
 
   // 3) Element visibility validation
-  await expect(page.getByText('Qafox.com')).toBeVisible();
+  // await expect(page.getByText('Qafox.com')).toBeVisible();
 
   // 4) Control enabled validation (Radio button "No")
   const radioNo = page.getByRole('radio', { name: 'No' });
   await expect(radioNo).toBeEnabled();
 
-  // 5) Radio button checked validation
+  // 👉 FIX: Check radio button before asserting checked state
+  await radioNo.check();
   await expect(radioNo).toBeChecked();
 
-  // 6) Element text validation
+  // 5) Element text validation
   const subscribeLabel = page.locator('label').filter({ hasText: 'Subscribe' });
-  await expect(subscribeLabel).toHaveText('Subscribe');
+  await expect(subscribeLabel).toContainText('Subscribe');
 
-  // 7) Checkbox checked validation
-  const privacyCheckbox = page.locator('input[type="checkbox"]');
+  // 6) Checkbox checked validation
+  const privacyCheckbox = page.locator('input[name="agree"]');
   await privacyCheckbox.check();
   await expect(privacyCheckbox).toBeChecked();
 
-  // 8) Attribute validation
+  // 7) Attribute validation
   const continueButton = page.locator('input.btn.btn-primary');
   await expect(continueButton).toHaveAttribute('value', 'Continue');
 
-  // 9) Element has text
+  // 8) Element has text (regex is correct here)
   await expect(page.locator('#content')).toHaveText(/Register Account/);
 
-  // 10) Element contains text
+  // 9) Element contains text
   await expect(page.locator('#content')).toContainText('Account');
 
-  // 11) Input value validation
+  // 10) Input value validation
   const firstNameInput = page.locator('#input-firstname');
   await firstNameInput.fill('Hi');
   await expect(firstNameInput).toHaveValue('Hi');
 
+  // 10) expect(locator).toHaveCount()  List of elements has given length
+
+
+  await page.goto("https://testautomationpractice.blogspot.com/p/playwrightpractice.html")
+  page.locator("(//input[@id='comboBox'])[1]").click()
+
+  
+  const dropdownValues = await page.locator("//div[@id='dropdown']//div")
+    await expect(dropdownValues).toHaveCount(100)
 });

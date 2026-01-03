@@ -20,6 +20,7 @@ test('muliplelocators', async({page})=>{
         console.log(produclist)
 
     }
+    
 
 })
 
